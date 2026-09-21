@@ -1,0 +1,63 @@
+---
+date: <% tp.date.now("YYYY-MM-DD") %>
+xp_str: 0
+xp_int: 0
+xp_cha: 0
+xp_wis: 0
+q_str_1: false
+q_str_2: false
+q_str_3: false
+q_int_1: false
+q_int_2: false
+q_int_3: false
+q_cha_1: false
+q_cha_2: false
+q_wis_1: false
+q_wis_2: false
+---
+# ⚔️ Задания на день
+
+### 💪 Сила (STR)
+- `INPUT[toggle:q_str_1]` Утренняя разминка / зарядка (+20 STR)
+- `INPUT[toggle:q_str_2]` Силовая тренировка / пробежка (+60 STR)
+- `INPUT[toggle:q_str_3]` 10 000 шагов (+30 STR)
+
+### 🧠 Интеллект (INT)
+- `INPUT[toggle:q_int_1]` Чтение 20 страниц книги (+30 INT)
+- `INPUT[toggle:q_int_2]` 1 час глубокой работы / учебы (+50 INT)
+- `INPUT[toggle:q_int_3]` Урок иностранного языка (+25 INT)
+
+### 🗣️ Харизма (CHA)
+- `INPUT[toggle:q_cha_1]` Позвонить близким / встреча с друзьями (+30 CHA)
+- `INPUT[toggle:q_cha_2]` Качественный созвон (+40 CHA)
+
+### 🧘 Мудрость (WIS)
+- `INPUT[toggle:q_wis_1]` Медитация 10 минут (+25 WIS)
+- `INPUT[toggle:q_wis_2]` День без социальных сетей (+50 WIS)
+
+---
+
+```dataviewjs
+const btn = dv.el('button', '💾 Зафиксировать опыт в свойства', {
+    cls: 'mod-cta'
+});
+
+btn.onclick = async () => {
+    const file = app.workspace.getActiveFile();
+    if (!file) return;
+
+    await app.fileManager.processFrontMatter(file, (fm) => {
+        // Подсчет характеристик на основе флагов
+        fm.xp_str = (fm.q_str_1 ? 20 : 0) + (fm.q_str_2 ? 60 : 0) + (fm.q_str_3 ? 30 : 0);
+        fm.xp_int = (fm.q_int_1 ? 30 : 0) + (fm.q_int_2 ? 50 : 0) + (fm.q_int_3 ? 25 : 0);
+        fm.xp_cha = (fm.q_cha_1 ? 30 : 0) + (fm.q_cha_2 ? 40 : 0);
+        fm.xp_wis = (fm.q_wis_1 ? 25 : 0) + (fm.q_wis_2 ? 50 : 0);
+    });
+
+    new Notice("✅ Опыт успешно сохранен в свойства!");
+};
+```
+
+
+
+
